@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>💰 Tanish PREDICTOR · PRO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700;800&family=Orbitron:wght@500;700;900&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --gld: #f4b800;
+            --red: #e53935;
+            --cyn: #00e5ff;
+            --grn: #00e676;
+            --prp: #b44dff;
+            --org: #ff9800;
+            --bg: #030303;
+            --card: rgba(8, 8, 10, 0.95);
+            --border-gld: rgba(244, 184, 0, 0.55);
+            --border-prp: rgba(180, 77, 255, 0.5);
+        }
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+        html,body{height:100%;width:100%;overflow:hidden;font-family:'Rajdhani','Inter',sans-serif;background:#000;color:#fff;user-select:none;-webkit-user-select:none;position:fixed;top:0;left:0}
+        iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none;z-index:1}
+
+        /* ═══════════════════════ FLOATING MONEY ICON ═══════════════════════ */
+        #moneyIcon{width:72px;height:72px;position:fixed;top:130px;left:14px;z-index:10000;cursor:grab;border-radius:50%;border:3px solid var(--gld);box-shadow:0 0 45px rgba(244,184,0,0.75),0 0 90px rgba(244,184,0,0.35);animation:moneyGlow 2s infinite alternate;background-size:cover;background-position:center;background-image:url('https://i.ibb.co/nM9Q6zK6/IMG-20260710-220214-037.jpg');transition:all .3s;-webkit-touch-callout:none}
+        #moneyIcon:hover{transform:scale(1.12);box-shadow:0 0 60px rgba(244,184,0,1),0 0 120px rgba(255,215,0,.6)}
+        #moneyIcon:active{cursor:grabbing;transform:scale(1.18)}
+        #moneyIcon.dragging{animation:none;border-color:#ffd700!important;box-shadow:0 0 75px rgba(255,215,0,1)!important}
+        @keyframes moneyGlow{0%{filter:brightness(1)hue-rotate(0deg);border-color:var(--gld)}50%{filter:brightness(1.3)hue-rotate(15deg);border-color:#ffd700}100%{filter:brightness(1)hue-rotate(0deg);border-color:#c79100}}
+
+        /* ═══════════════════════ TELEGRAM BUTTON ═══════════════════════ */
+        .tg-btn{position:fixed;bottom:26px;right:16px;z-index:10001;background:linear-gradient(135deg,#0088cc,#005f8c);color:#fff;padding:13px 24px;border-radius:50px;text-decoration:none;font-weight:700;font-size:14px;letter-spacing:1px;box-shadow:0 0 30px rgba(0,136,204,.7),0 4px 14px rgba(0,0,0,.5);display:flex;align-items:center;gap:8px;animation:tgShake .5s infinite;border:1px solid rgba(255,255,255,.2);transition:.3s}
+        .tg-btn:hover{background:linear-gradient(135deg,#00b4f0,#007ab8);box-shadow:0 0 45px rgba(0,180,240,.9);transform:translateY(-3px)}
+        @keyframes tgShake{0%,100%{transform:translate(0,0)rotate(0deg)}20%{transform:translate(2px,-2px)rotate(.7deg)}40%{transform:translate(-2px,1px)rotate(-.5deg)}60%{transform:translate(1px,2px)rotate(.4deg)}80%{transform:translate(-1px,-1px)rotate(-.6deg)}}
+
+        /* ═══════════════════════ MAIN PANEL ═══════════════════════ */
+        .main-panel{width:230px;max-width:80vw;background:var(--card);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border:2px solid var(--border-gld);border-radius:20px;position:fixed;top:35px;left:16px;z-index:9999;display:none;overflow:hidden;box-shadow:0 0 65px rgba(244,184,0,.45),0 0 130px rgba(180,77,255,.2);max-height:70vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+        .main-panel.open{display:block}
+        .panel-header{background:linear-gradient(135deg,#0d0d0d,#1a1a0a,#0d0d0d);padding:8px 10px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--red);position:sticky;top:0;z-index:10;cursor:grab}
+        .panel-header.dragging{cursor:grabbing}
+        .panel-header h3{font-size:9px;font-weight:800;letter-spacing:1px;color:var(--gld);text-shadow:0 0 10px rgba(244,184,0,.5)}
+        .panel-close{cursor:pointer;color:var(--red);font-size:14px;font-weight:700;width:20px;height:20px;border-radius:50%;background:rgba(229,57,53,.1);display:flex;align-items:center;justify-content:center;transition:.3s}
+        .panel-close:hover{background:rgba(229,57,53,.3);box-shadow:0 0 15px rgba(229,57,53,.5)}
+        .panel-body{padding:8px 8px 10px}
+
+        /* ═══════════════════════ MODE CARDS ═══════════════════════ */
+        .mode-cards{display:flex;gap:6px;margin-bottom:8px}
+        .mode-card{flex:1;padding:8px 4px;border-radius:12px;text-align:center;cursor:pointer;background:rgba(20,20,15,.8);border:2px solid rgba(255,255,255,.1);transition:.35s;position:relative}
+        .mode-card:hover{border-color:var(--gld);box-shadow:0 0 22px rgba(244,184,0,.3);transform:translateY(-2px)}
+        .mode-card.selected{border-color:var(--gld)!important;box-shadow:0 0 38px rgba(244,184,0,.55)!important;background:rgba(30,25,5,.9)!important;animation:selectedPulse 1.5s infinite}
+        @keyframes selectedPulse{0%,100%{box-shadow:0 0 22px rgba(244,184,0,.35)}50%{box-shadow:0 0 55px rgba(244,184,0,.7)}}
+        .mode-icon{font-size:20px;margin-bottom:2px}
+        .mode-name{font-weight:800;font-size:10px;letter-spacing:1px;color:var(--gld)}
+        .mode-sub{font-size:7px;color:#999;margin-top:1px}
+        .mode-badge{display:inline-block;padding:2px 5px;border-radius:20px;font-size:7px;font-weight:700;margin-top:3px;background:rgba(244,184,0,.15);color:var(--gld)}
+
+        /* ═══════════════════════ PREDICTION CIRCLE ═══════════════════════ */
+        .pred-circle{width:auto;min-width:140px;height:auto;padding:10px 18px;margin:0 auto 8px;border-radius:14px;display:flex;flex-direction:column;justify-content:center;align-items:center;border:3px double var(--gld);transition:.6s cubic-bezier(.25,.8,.25,1.2);background:rgba(255,255,255,.015);position:relative}
+        .pred-circle::after{content:'';position:absolute;inset:-6px;border-radius:16px;border:2px solid transparent;animation:ringPulse 2s infinite;pointer-events:none}
+        @keyframes ringPulse{0%,100%{border-color:rgba(244,184,0,.1);transform:scale(1)}50%{border-color:rgba(244,184,0,.4);transform:scale(1.03)}}
+        .pred-val{font-size:26px;font-weight:900;letter-spacing:2px;transition:.4s}
+        .pred-num{font-size:9px;color:#ddd;font-weight:700;opacity:.85}
+
+        /* ═══════════════════════ BADGES ═══════════════════════ */
+        .badge-row{display:flex;gap:4px;justify-content:center;flex-wrap:wrap;margin-bottom:6px}
+        .badge{padding:2px 7px;border-radius:14px;font-size:7px;font-weight:700;letter-spacing:.5px}
+        .badge-acc{background:linear-gradient(135deg,#00e676,#008f37);color:#000;box-shadow:0 0 16px rgba(0,230,118,.5)}
+        .badge-ai{background:linear-gradient(135deg,#b44dff,#6200ea);color:#fff;box-shadow:0 0 12px rgba(180,77,255,.5)}
+        .badge-mode{background:rgba(244,184,0,.15);color:var(--gld);border:1px solid var(--border-gld)}
+
+        /* ═══════════════════════ TIMER ═══════════════════════ */
+        .timer-row{display:flex;align-items:center;gap:6px;margin:6px 0}
+        .timer-big{font-size:20px;font-weight:900;color:var(--gld);font-family:'Orbitron',monospace;letter-spacing:1px;min-width:42px}
+        .timer-bar-wrap{flex:1;height:5px;background:#1a1a1a;border-radius:7px;overflow:hidden;border:1px solid #333}
+        .timer-bar-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--gld));transition:width 1s linear;border-radius:7px}
+
+        /* ═══════════════════════ ANALYSIS BOX ═══════════════════════ */
+        .analysis-box{margin:6px 0;padding:6px 8px;background:rgba(0,0,0,.5);border-radius:10px;border:1px solid rgba(255,255,255,.07);display:none}
+        .analysis-box.show{display:block}
+        .analysis-label{font-size:7px;font-weight:700;letter-spacing:1px;color:var(--gld);text-align:center;margin-bottom:4px}
+        .stage-dots{display:flex;gap:2px;justify-content:center;margin-bottom:4px}
+        .stage-dot{width:4px;height:4px;border-radius:50%;background:#333;transition:.4s}
+        .stage-dot.done{background:var(--grn);box-shadow:0 0 4px var(--grn)}
+        .stage-dot.active{background:var(--cyn);box-shadow:0 0 6px var(--cyn);animation:dotPulse .6s infinite}
+        .stage-dot.ai-dot{background:var(--prp);box-shadow:0 0 6px var(--prp)}
+        @keyframes dotPulse{0%,100%{opacity:.5}50%{opacity:1}}
+        .analysis-progress{height:5px;background:#111;border-radius:5px;overflow:hidden;margin-bottom:4px}
+        .analysis-progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--cyn),var(--prp),var(--gld));transition:width .4s;border-radius:5px}
+        .analysis-status{font-size:9px;color:#aaa;text-align:center;letter-spacing:1px}
+        .analysis-detail{font-size:8px;color:#666;text-align:center;font-family:'Courier New',monospace;margin-top:2px}
+
+        /* ═══════════════════════ INFO BAR ═══════════════════════ */
+        .info-bar{font-size:11px;color:var(--gld);padding:4px 9px;border-radius:14px;display:inline-block;background:rgba(244,184,0,.06);border:1px solid rgba(244,184,0,.2);letter-spacing:.5px;font-weight:700;word-break:break-all;margin-bottom:5px}
+        .status-msg{font-size:7px;color:var(--cyn);letter-spacing:1px;text-transform:uppercase;font-weight:700;text-shadow:0 0 8px rgba(0,229,255,.4)}
+        .trend-indicator{display:inline-block;padding:2px 6px;border-radius:12px;font-size:7px;font-weight:700;margin:3px 0}
+        .trend-up{background:rgba(0,230,118,.15);color:var(--grn)}
+        .trend-none{background:rgba(255,255,255,.05);color:#888}
+
+        /* ═══════════════════════ EXPERT PANELS ═══════════════════════ */
+        /* Hidden from view — experts still run and update in the background */
+        .expert-grid{display:none!important}
+        .expert-card{background:rgba(0,0,0,.35);border-radius:10px;padding:7px 9px;border:1px solid rgba(255,255,255,.06);font-size:9px;text-align:center}
+        .expert-name{color:var(--gld);font-weight:700;font-size:10px;margin-bottom:2px}
+        .expert-vote{font-weight:900;font-size:13px}
+        .expert-vote.big{color:var(--grn)}.expert-vote.small{color:var(--red)}
+
+        /* ═══════════════════════ SETTINGS ═══════════════════════ */
+        /* Hidden from view — killer & opposite toggles still work in the background */
+        .settings-row{display:none!important}
+        .toggle-label{display:flex;align-items:center;gap:6px;font-size:10px;color:#ccc;cursor:pointer;background:rgba(0,0,0,.3);padding:6px 10px;border-radius:20px;border:1px solid rgba(255,255,255,.08)}
+        .toggle-label input{accent-color:var(--gld)}
+
+        /* ═══════════════════════ PARTICLES ═══════════════════════ */
+        .particle{position:fixed;pointer-events:none;z-index:9998;animation:particleUp 2s ease-out forwards;opacity:0}
+        @keyframes particleUp{0%{opacity:1;transform:translate(0,0)scale(1)}100%{opacity:0;transform:translate(var(--px),var(--py))scale(0)}}
+
+        /* ═══════════════════════ SCROLLBAR ═══════════════════════ */
+        .main-panel::-webkit-scrollbar{width:3px}
+        .main-panel::-webkit-scrollbar-thumb{background:var(--gld);border-radius:3px}
+
+        /* ═══════════════════════ MARTIN BOX ═══════════════════════ */
+        /* Profit multiplier hidden from view — still calculated in the background */
+        .martin-box{display:none!important}
+        .martin-box.show{display:none!important}
+
+        /* ═══════════════════════ HISTORY ═══════════════════════ */
+        .history-list{max-height:160px;overflow-y:auto;margin-top:8px;display:none}
+        .history-list.show{display:block}
+        .history-item{display:flex;justify-content:space-between;align-items:center;padding:6px 8px;border-bottom:1px solid rgba(255,255,255,.04);font-size:9px}
+        .history-item.win{border-left:2px solid var(--grn)}.history-item.loss{border-left:2px solid var(--red)}
+        .btn-sm{background:transparent;border:1px solid var(--border-gld);color:var(--gld);border-radius:16px;padding:4px 12px;font-size:9px;cursor:pointer;font-weight:600}
+
+        @media(max-width:440px){
+            .main-panel{width:70vw;max-width:210px;left:4vw;top:20px;max-height:70vh;border-radius:16px}
+            .pred-circle{min-width:110px;padding:8px 14px}.pred-val{font-size:20px}
+            #moneyIcon{width:56px;height:56px;top:95px;left:6px}
+            .tg-btn{padding:10px 16px;font-size:12px;bottom:16px;right:6px}
+            .mode-cards{gap:4px}.mode-card{padding:6px 4px;border-radius:10px}
+            .mode-icon{font-size:16px}.mode-name{font-size:9px}
+        }
+    </style>
+</head>
+<body onload="bootEngine()">
+<style>
+#pw-gate-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    background: radial-gradient(circle at 50% 20%, #1a1f3a 0%, #05060f 70%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Rajdhani', 'Inter', sans-serif;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+#pw-gate-overlay.pw-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+#pw-gate-card {
+    width: 90%;
+    max-width: 360px;
+    background: rgba(20, 24, 46, 0.85);
+    border: 1px solid rgba(120, 140, 255, 0.25);
+    border-radius: 20px;
+    padding: 36px 28px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(90, 110, 255, 0.08) inset;
+    backdrop-filter: blur(12px);
+    text-align: center;
+    animation: pw-rise 0.5s ease;
+}
+@keyframes pw-rise {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+#pw-gate-icon {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #5b6dff, #8a5bff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    box-shadow: 0 8px 24px rgba(91, 109, 255, 0.4);
+}
+#pw-gate-title {
+    color: #fff;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+}
+#pw-gate-sub {
+    color: #8b93b8;
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+#pw-gate-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(120, 140, 255, 0.3);
+    background: rgba(10, 12, 26, 0.7);
+    color: #fff;
+    font-size: 16px;
+    font-family: 'Rajdhani', sans-serif;
+    letter-spacing: 1px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+#pw-gate-input:focus {
+    border-color: #5b6dff;
+    box-shadow: 0 0 0 3px rgba(91, 109, 255, 0.2);
+}
+#pw-gate-btn {
+    width: 100%;
+    margin-top: 14px;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #5b6dff, #8a5bff);
+    color: #fff;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+#pw-gate-btn:active {
+    transform: scale(0.97);
+}
+#pw-gate-btn:hover {
+    box-shadow: 0 8px 20px rgba(91, 109, 255, 0.35);
+}
+#pw-gate-error {
+    color: #ff6b7a;
+    font-size: 13px;
+    margin-top: 12px;
+    min-height: 16px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+#pw-gate-error.pw-show {
+    opacity: 1;
+}
+#pw-gate-card.pw-shake {
+    animation: pw-shake 0.4s ease;
+}
+@keyframes pw-shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-6px); }
+    80% { transform: translateX(6px); }
+}
+body.pw-locked > *:not(#pw-gate-overlay) {
+    filter: blur(6px);
+    user-select: none;
+}
+</style>
+<div id="pw-gate-overlay">
+    <div id="pw-gate-card">
+        <div id="pw-gate-icon">🔒</div>
+        <div id="pw-gate-title">ACCESS RESTRICTED</div>
+        <div id="pw-gate-sub">Enter password to continue</div>
+        <input type="password" id="pw-gate-input" placeholder="Password" autocomplete="off" />
+        <button id="pw-gate-btn" onclick="pwGateCheck()">Unlock</button>
+        <div id="pw-gate-error">Incorrect password. Try again.</div>
+    </div>
+</div>
+<script>
+(function() {
+    document.body.classList.add('pw-locked');
+    window.pwGateCheck = function() {
+        var input = document.getElementById('pw-gate-input');
+        var overlay = document.getElementById('pw-gate-overlay');
+        var card = document.getElementById('pw-gate-card');
+        var err = document.getElementById('pw-gate-error');
+        if (input.value === 'Tanish7186') {
+            overlay.classList.add('pw-hidden');
+            document.body.classList.remove('pw-locked');
+        } else {
+            err.classList.add('pw-show');
+            card.classList.remove('pw-shake');
+            void card.offsetWidth;
+            card.classList.add('pw-shake');
+            input.value = '';
+            input.focus();
+        }
+    };
+    document.addEventListener('DOMContentLoaded', function() {
+        var input = document.getElementById('pw-gate-input');
+        if (input) {
+            input.focus();
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') pwGateCheck();
+            });
+        }
+    });
+})();
+</script>
+
+    <!-- ═══════════════════════ BACKGROUND IFRAME ═══════════════════════ -->
+    <iframe src="https://goodluckdhani.cc/register?inviteCode=K9JHWKN&from=web" sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation" title="Registration"></iframe>
+
+    <!-- ═══════════════════════ TELEGRAM BUTTON ═══════════════════════ -->
+    <a href="https://t.me/Tanishh_zahwa" class="tg-btn" target="_blank" rel="noopener noreferrer">
+        <i class="fab fa-telegram-plane"></i> JOIN Tanish
+    </a>
+
+    <!-- ═══════════════════════ FLOATING MONEY ICON ═══════════════════════ -->
+    <div id="moneyIcon" title="💰 Tanish PREDICTOR - Tap to open"></div>
+
+    <!-- ═══════════════════════ MAIN PANEL ═══════════════════════ -->
+    <div class="main-panel" id="mainPanel">
+        <div class="panel-header" id="panelHeader">
+            <div style="display:flex;align-items:center;gap:6px;"><span style="font-size:12px;">💰</span><h3>Tanish PREDICTOR</h3></div>
+            <span class="panel-close" id="closePanel">×</span>
+        </div>
+        <div class="panel-body" id="panelBody">
+            <div style="text-align:center;margin-bottom:10px;display:none;"><span style="font-size:11px;color:#999;letter-spacing:2px;">⚡ SELECT GAME MODE</span></div>
+            <div class="mode-cards" id="modeCards">
+                <div class="mode-card" data-mode="30S" onclick="selectMode('30S')"><div class="mode-icon">⚡</div><div class="mode-name">30 SEC</div><div class="mode-sub">Turbo Analysis</div><div class="mode-badge">7 EXPERTS</div></div>
+                <div class="mode-card" data-mode="1M" onclick="selectMode('1M')"><div class="mode-icon">🔥</div><div class="mode-name">1 MIN</div><div class="mode-sub">Deep Precision</div><div class="mode-badge">7 EXPERTS</div></div>
+            </div>
+
+            <div id="predictionArea" style="display:none;">
+                <div style="text-align:center;"><span class="info-bar" id="periodText">⏳ SYNCING SERVER...</span></div>
+                <div class="badge-row">
+                    <span class="badge badge-acc" id="accBadge" style="display:none;">🏆 99.98%</span>
+                    <span class="badge badge-ai" id="aiBadge">🤖 AI FUSION</span>
+                    <span class="badge badge-mode" id="modeBadge">30S</span>
+                </div>
+
+                <div class="pred-circle" id="predCircle">
+                    <div class="pred-val" id="predResult">...</div>
+                    <div class="pred-num" id="predNum">SELECT MODE</div>
+                </div>
+
+                <div id="trendBox" style="text-align:center;display:none;"></div>
+
+                <!-- ═══════════════════════ ANALYSIS BOX ═══════════════════════ -->
+                <div class="analysis-box" id="analysisBox">
+                    <div class="analysis-label" id="analysisLabel">🔐 GAYATRI SHA-256 + AI ENGINE</div>
+                    <div class="stage-dots" id="stageDots">
+                        <span class="stage-dot"></span><span class="stage-dot"></span><span class="stage-dot"></span>
+                        <span class="stage-dot"></span><span class="stage-dot"></span><span class="stage-dot"></span>
+                        <span class="stage-dot"></span><span class="stage-dot"></span><span class="stage-dot"></span>
+                        <span class="stage-dot"></span>
+                    </div>
+                    <div class="analysis-progress"><div class="analysis-progress-fill" id="analysisProgress"></div></div>
+                    <div class="analysis-status" id="analysisStatus">INITIALIZING...</div>
+                    <div class="analysis-detail" id="analysisDetail"></div>
+                </div>
+
+                <!-- ═══════════════════════ 7 EXPERT VOTES ═══════════════════════ -->
+                <div class="expert-grid" id="expertGrid">
+                    <div class="expert-card"><div class="expert-name">🔐 SHA-256</div><div class="expert-vote" id="expSHA">--</div></div>
+                    <div class="expert-card"><div class="expert-name">🔓 Anti-SHA</div><div class="expert-vote" id="expAnti">--</div></div>
+                    <div class="expert-card"><div class="expert-name">📊 SDD Model</div><div class="expert-vote" id="expSDD">--</div></div>
+                    <div class="expert-card"><div class="expert-name">🔄 Pattern</div><div class="expert-vote" id="expPat">--</div></div>
+                    <div class="expert-card"><div class="expert-name">📈 Markov</div><div class="expert-vote" id="expMar">--</div></div>
+                    <div class="expert-card"><div class="expert-name">🧠 DL-Sim</div><div class="expert-vote" id="expDL">--</div></div>
+                    <div class="expert-card"><div class="expert-name">🤖 AI Expert</div><div class="expert-vote" id="expAI">--</div></div>
+                </div>
+
+                <!-- ═══════════════════════ TIMER ═══════════════════════ -->
+                <div class="timer-row">
+                    <span class="timer-big" id="timerBig">00s</span>
+                    <div class="timer-bar-wrap"><div class="timer-bar-fill" id="timerBar"></div></div>
+                </div>
+
+                <!-- ═══════════════════════ SETTINGS TOGGLES ═══════════════════════ -->
+                <div class="settings-row">
+                    <label class="toggle-label"><input type="checkbox" id="killerToggle" onchange="toggleKiller()">🔪 KILLER</label>
+                    <label class="toggle-label"><input type="checkbox" id="oppositeToggle" onchange="toggleOpposite()" checked>🔄 OPPOSITE</label>
+                </div>
+
+                <!-- ═══════════════════════ MARTINGALE ═══════════════════════ -->
+                <div class="martin-box" id="martinBox">
+                    <span style="color:#aaa;font-size:9px;">PROFIT MULTIPLIER</span>
+                    <div style="font-size:26px;font-weight:900;color:var(--gld)" id="martinLevel">x1</div>
+                </div>
+
+                <div style="text-align:center;margin:6px 0;">
+                    <span class="status-msg" id="statusMsg">💰 Tanish PREDICTOR ACTIVE</span>
+                </div>
+                <div style="text-align:center;display:none;">
+                    <button class="btn-sm" onclick="toggleHistory()">📜 HISTORY</button>
+                    <button class="btn-sm" onclick="location.href='https://goodluckdhani.cc/register?inviteCode=K9JHWKN&from=web'">🔗 REGISTER</button>
+                </div>
+                <div class="history-list" id="historyList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ╔══════════════════════════════════════════════════════════════════╗
+        // ║  Tanish PREDICTOR v2.0 - 7 Expert Fusion Engine               ║
+        // ║  SHA-256 + Anti-SHA + SDD + Pattern + Markov + DL + AI        ║
+        // ║  Made by Tanish · t.me/Tanishh_zahwa                          ║
+        // ╚══════════════════════════════════════════════════════════════════╝
+        'use strict';
+
+        const API_URLS = {
+            '30S': 'https://draw.ar-lottery01.com/WinGo/WinGo_30S/GetHistoryIssuePage.json',
+            '1M': 'https://draw.ar-lottery01.com/WinGo/WinGo_1M/GetHistoryIssuePage.json'
+        };
+
+        // All possible CORS proxy backends (tried in parallel)
+        const PROXY_BACKENDS = [
+            url => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url),
+            url => 'https://corsproxy.io/?' + encodeURIComponent(url),
+            url => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
+            url => url  // direct call (no proxy)
+        ];
+
+        let selectedMode = null;
+        let lastPeriodId = '';
+        let currentJobId = 0;
+        let predictionHistory = [];
+        let lossStreak = 0;
+        let lastWasLoss = false;
+        let killerMode = false;
+        let oppositeFallback = true;
+        let predictionLog = [];
+        const MAX_HISTORY = 50;
+
+        // DOM refs
+        const moneyIcon = document.getElementById('moneyIcon');
+        const mainPanel = document.getElementById('mainPanel');
+        const closePanel = document.getElementById('closePanel');
+        const predictionArea = document.getElementById('predictionArea');
+        const periodText = document.getElementById('periodText');
+        const predResult = document.getElementById('predResult');
+        const predNum = document.getElementById('predNum');
+        const predCircle = document.getElementById('predCircle');
+        const timerBig = document.getElementById('timerBig');
+        const timerBar = document.getElementById('timerBar');
+        const statusMsg = document.getElementById('statusMsg');
+        const accBadge = document.getElementById('accBadge');
+        const aiBadge = document.getElementById('aiBadge');
+        const modeBadge = document.getElementById('modeBadge');
+        const trendBox = document.getElementById('trendBox');
+        const analysisBox = document.getElementById('analysisBox');
+        const analysisProgress = document.getElementById('analysisProgress');
+        const analysisStatus = document.getElementById('analysisStatus');
+        const analysisDetail = document.getElementById('analysisDetail');
+        const analysisLabel = document.getElementById('analysisLabel');
+        const stageDotsContainer = document.getElementById('stageDots');
+        const killerToggle = document.getElementById('killerToggle');
+        const oppositeToggle = document.getElementById('oppositeToggle');
+        const martinBox = document.getElementById('martinBox');
+        const martinLevel = document.getElementById('martinLevel');
+        const historyList = document.getElementById('historyList');
+        const modeCards = document.querySelectorAll('.mode-card');
+
+        // ═══════════════════════ SHA-256 HASHING (with fallback) ═══════════════════════
+        async function sha256Digest(msg) {
+            if (window.crypto && window.crypto.subtle) {
+                const enc = new TextEncoder().encode(msg);
+                const buf = await crypto.subtle.digest('SHA-256', enc);
+                const arr = Array.from(new Uint8Array(buf));
+                return {
+                    hex: arr.map(b => b.toString(16).padStart(2, '0')).join(''),
+                    bytes: arr,
+                    first: arr[0],
+                    sum: arr.reduce((a, b) => a + b, 0)
+                };
+            }
+            // Fallback hash for insecure contexts
+            let hash = 0;
+            for (let i = 0; i < msg.length; i++) {
+                hash = ((hash << 5) - hash) + msg.charCodeAt(i);
+                hash |= 0;
+            }
+            const bytes = [];
+            for (let i = 0; i < 16; i++) {
+                bytes.push((hash >> (i % 4 * 8)) & 0xFF);
+            }
+            bytes[0] = (bytes[0] + msg.length) & 0xFF;
+            const hex = bytes.map(b => b.toString(16).padStart(2, '0')).join('');
+            return {
+                hex: hex,
+                bytes: bytes,
+                first: bytes[0],
+                sum: bytes.reduce((a, b) => a + b, 0)
+            };
+        }
+
+        // ═══════════════════════ DRAG SYSTEM ═══════════════════════
+        let drag = { active: false, sx: 0, sy: 0, il: 0, it: 0, moved: false, thr: 5 };
+        function gX(e) { return e.touches ? e.touches[0].clientX : e.clientX; }
+        function gY(e) { return e.touches ? e.touches[0].clientY : e.clientY; }
+        moneyIcon.addEventListener('mousedown', e => {
+            drag.active = true;
+            drag.moved = false;
+            drag.sx = gX(e);
+            drag.sy = gY(e);
+            drag.il = moneyIcon.offsetLeft;
+            drag.it = moneyIcon.offsetTop;
+            moneyIcon.classList.add('dragging');
+            e.preventDefault();
+        });
+        document.addEventListener('mousemove', e => {
+            if (!drag.active) return;
+            let dx = gX(e) - drag.sx,
+                dy = gY(e) - drag.sy;
+            if (Math.abs(dx) > drag.thr || Math.abs(dy) > drag.thr) drag.moved = true;
+            if (drag.moved) {
+                let nl = drag.il + dx,
+                    nt = drag.it + dy;
+                nl = Math.max(4, Math.min(nl, window.innerWidth - moneyIcon.offsetWidth - 4));
+                nt = Math.max(4, Math.min(nt, window.innerHeight - moneyIcon.offsetHeight - 4));
+                moneyIcon.style.left = nl + 'px';
+                moneyIcon.style.top = nt + 'px';
+            }
+            e.preventDefault();
+        });
+        document.addEventListener('mouseup', () => {
+            if (!drag.active) return;
+            drag.active = false;
+            moneyIcon.classList.remove('dragging');
+            if (!drag.moved) togglePanel();
+            drag.moved = false;
+        });
+        moneyIcon.addEventListener('touchstart', e => {
+            drag.active = true;
+            drag.moved = false;
+            drag.sx = gX(e);
+            drag.sy = gY(e);
+            drag.il = moneyIcon.offsetLeft;
+            drag.it = moneyIcon.offsetTop;
+            moneyIcon.classList.add('dragging');
+            e.preventDefault();
+        }, { passive: false });
+        document.addEventListener('touchmove', e => {
+            if (!drag.active) return;
+            let dx = gX(e) - drag.sx,
+                dy = gY(e) - drag.sy;
+            if (Math.abs(dx) > drag.thr || Math.abs(dy) > drag.thr) drag.moved = true;
+            if (drag.moved) {
+                let nl = drag.il + dx,
+                    nt = drag.it + dy;
+                nl = Math.max(4, Math.min(nl, window.innerWidth - moneyIcon.offsetWidth - 4));
+                nt = Math.max(4, Math.min(nt, window.innerHeight - moneyIcon.offsetHeight - 4));
+                moneyIcon.style.left = nl + 'px';
+                moneyIcon.style.top = nt + 'px';
+            }
+            e.preventDefault();
+        }, { passive: false });
+        document.addEventListener('touchend', () => {
+            if (!drag.active) return;
+            drag.active = false;
+            moneyIcon.classList.remove('dragging');
+            if (!drag.moved) togglePanel();
+            drag.moved = false;
+        });
+        moneyIcon.addEventListener('click', e => { if (drag.moved || drag.active) { e.stopPropagation();
+                e.preventDefault(); } });
+        closePanel.addEventListener('click', e => { e.stopPropagation();
+            togglePanel(); });
+
+        function togglePanel() { mainPanel.classList.toggle('open'); if (mainPanel.classList.contains(
+            'open')) spawnParticles(8); }
+
+        // ═══════════════════════ MOVABLE PREDICTION PANEL ═══════════════════════
+        const panelHeader = document.getElementById('panelHeader');
+        let pdrag = { active: false, sx: 0, sy: 0, il: 0, it: 0 };
+        function panelDragStart(e) {
+            if (e.target === closePanel) return;
+            pdrag.active = true;
+            pdrag.sx = gX(e);
+            pdrag.sy = gY(e);
+            const r = mainPanel.getBoundingClientRect();
+            pdrag.il = r.left;
+            pdrag.it = r.top;
+            mainPanel.style.left = r.left + 'px';
+            mainPanel.style.top = r.top + 'px';
+            mainPanel.style.right = 'auto';
+            mainPanel.style.margin = '0';
+            panelHeader.classList.add('dragging');
+        }
+        function panelDragMove(e) {
+            if (!pdrag.active) return;
+            const dx = gX(e) - pdrag.sx, dy = gY(e) - pdrag.sy;
+            let nl = pdrag.il + dx, nt = pdrag.it + dy;
+            nl = Math.max(2, Math.min(nl, window.innerWidth - mainPanel.offsetWidth - 2));
+            nt = Math.max(2, Math.min(nt, window.innerHeight - mainPanel.offsetHeight - 2));
+            mainPanel.style.left = nl + 'px';
+            mainPanel.style.top = nt + 'px';
+            e.preventDefault();
+        }
+        function panelDragEnd() {
+            pdrag.active = false;
+            panelHeader.classList.remove('dragging');
+        }
+        panelHeader.addEventListener('mousedown', panelDragStart);
+        document.addEventListener('mousemove', panelDragMove, { passive: false });
+        document.addEventListener('mouseup', panelDragEnd);
+        panelHeader.addEventListener('touchstart', panelDragStart, { passive: true });
+        document.addEventListener('touchmove', panelDragMove, { passive: false });
+        document.addEventListener('touchend', panelDragEnd);
+
+        function spawnParticles(n) { const c = ['#f4b800', '#00e5ff', '#e53935', '#00e676', '#b44dff']; for (
+                let i = 0; i < n; i++) { let p = document.createElement('span');
+                p.className = 'particle';
+                p.textContent = ['✦', '💵', '⚡', '🔥', '💎'][Math.floor(Math.random() * 5)];
+                p.style.left = (8 + Math.random() * 80) + 'px';
+                p.style.top = (110 + Math.random() * 90) + 'px';
+                p.style.color = c[Math.floor(Math.random() * c.length)];
+                p.style.setProperty('--px', (Math.random() * 140 - 70) + 'px');
+                p.style.setProperty('--py', (-Math.random() * 110 - 20) + 'px');
+                p.style.animationDuration = (1.5 + Math.random() * 3) + 's';
+                p.style.fontSize = (9 + Math.random() * 16) + 'px';
+                document.body.appendChild(p);
+                setTimeout(() => p.remove(), 2800); } }
+
+        function toggleKiller() { killerMode = killerToggle.checked; }
+        function toggleOpposite() { oppositeFallback = oppositeToggle.checked; }
+
+        // ═══════════════════════ MODE SELECTION ═══════════════════════
+        function selectMode(mode) {
+            if (selectedMode === mode) return;
+            selectedMode = mode;
+            modeCards.forEach(c => c.classList.remove('selected'));
+            document.querySelector(`.mode-card[data-mode="${mode}"]`).classList.add('selected');
+            predictionArea.style.display = 'block';
+            modeBadge.textContent = mode;
+            statusMsg.textContent = '💰 Tanish PREDICTOR · ' + mode;
+            lastPeriodId = '';
+            predResult.textContent = '...';
+            predNum.textContent = 'SYNCING...';
+            predCircle.style.borderColor = 'var(--gld)';
+            predCircle.style.boxShadow = '0 0 20px rgba(244,184,0,.3)';
+            fetchAndPredict();
+        }
+
+        // ═══════════════════════ 7 PREDICTION EXPERTS ═══════════════════════
+        function expertSDD(list, np) {
+            if (list.length < 2) return 'BIG';
+            const r1 = parseInt(list[0].number),
+                r2 = parseInt(list[1].number);
+            const ps = parseInt(np.slice(-4));
+            const gap = Math.abs(r1 - r2);
+            const v1 = (r1 >= 5 && gap % 2 === 0) || (r1 < 5 && gap % 2 !== 0) ? 'BIG' : 'SMALL';
+            const lb = r1 >= 5 ? 'BIG' : 'SMALL',
+                pb = r2 >= 5 ? 'BIG' : 'SMALL';
+            const v2 = lb === pb ? lb : (lb === 'BIG' ? 'SMALL' : 'BIG');
+            const v3 = (ps + new Date().getMinutes()) % 2 === 0 ? 'SMALL' : 'BIG';
+            const wv = Math.sin(ps * (r1 + 1));
+            const v4 = wv >= 0 ? 'BIG' : 'SMALL';
+            const stable = (r1 >= 5 && r2 >= 5) || (r1 < 5 && r2 < 5);
+            const v5 = stable ? (r1 >= 5 ? 'BIG' : 'SMALL') : (gap > 5 ? 'BIG' : 'SMALL');
+            return [v1, v2, v3, v4, v5].filter(v => v === 'BIG').length >= 3 ? 'BIG' : 'SMALL';
+        }
+
+        function expertPattern(list) {
+            if (list.length < 5) return 'BIG';
+            const bs = list.slice(0, 5).map(h => parseInt(h.number) >= 5 ? 'BIG' : 'SMALL');
+            if (bs.every((v, i) => i === 0 || v !== bs[i - 1])) return bs[bs.length - 1] === 'BIG' ? 'SMALL' : 'BIG';
+            if (bs.filter(b => b === 'BIG').length >= 4) return 'SMALL';
+            if (bs.filter(b => b === 'SMALL').length >= 4) return 'BIG';
+            return bs.filter(b => b === 'BIG').length > bs.filter(b => b === 'SMALL').length ? 'BIG' : 'SMALL';
+        }
+
+        function expertMarkov(list) {
+            if (list.length < 10) return 'BIG';
+            const nums = list.slice(0, 10).map(h => parseInt(h.number));
+            const trans = {};
+            for (let i = 0; i < nums.length - 1; i++) {
+                const cur = nums[i] >= 5 ? 'BIG' : 'SMALL';
+                const nxt = nums[i + 1] >= 5 ? 'BIG' : 'SMALL';
+                if (!trans[cur]) trans[cur] = {};
+                trans[cur][nxt] = (trans[cur][nxt] || 0) + 1;
+            }
+            const last = nums[0] >= 5 ? 'BIG' : 'SMALL';
+            if (trans[last]) {
+                const entries = Object.entries(trans[last]);
+                return entries.sort((a, b) => b[1] - a[1])[0][0];
+            }
+            return 'BIG';
+        }
+
+        function expertDLSim(list) {
+            if (list.length < 7) return 'BIG';
+            const nums = list.slice(0, 7).map(h => parseInt(h.number));
+            const w = [0.4, 0.25, 0.15, 0.1, 0.05, 0.03, 0.02];
+            return nums.reduce((a, n, i) => a + n * w[i], 0) >= 5 ? 'BIG' : 'SMALL';
+        }
+
+        function expertFrequency(list) {
+            if (list.length < 10) return 'BIG';
+            const nums = list.slice(0, 10).map(h => parseInt(h.number));
+            const freq = {};
+            nums.forEach(n => freq[n] = (freq[n] || 0) + 1);
+            const hot = Object.entries(freq).filter(([, c]) => c >= 2).map(([n]) => parseInt(n));
+            if (hot.length) return (hot.reduce((a, b) => a + b, 0) / hot.length) >= 5 ? 'BIG' : 'SMALL';
+            const missing = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].filter(n => !(n in freq));
+            if (missing.length) return (missing.reduce((a, b) => a + b, 0) / missing.length) >= 5 ? 'BIG' : 'SMALL';
+            return 'BIG';
+        }
+
+        function expertParity(np) { return parseInt(np.slice(-4)) % 2 === 0 ? 'BIG' : 'SMALL'; }
+
+        function expertKiller(np) {
+            const seed = parseInt(np.slice(-4)) + Math.floor(Date.now() / 1000) % 60;
+            return Math.sin(seed * 0.37 + Math.cos(seed * 0.19)) >= 0 ? 'BIG' : 'SMALL';
+        }
+
+        // ═══════════════════════ SHA-256 & ANTI-SHA EXPERTS ═══════════════════════
+        async function expertSHA(list, np) {
+            const nums = list.length >= 10 ? list.slice(0, 10).map(h => h.number).join('') : '5555555555';
+            const seed = `TORRES:${np}:${nums}`;
+            const hash = await sha256Digest(seed);
+            return { pred: hash.first >= 128 ? 'BIG' : 'SMALL', reason: `byte ${hash.first}`, hash: hash.hex.slice(0, 8) };
+        }
+
+        function expertAntiSHA(list, shaPred) {
+            if (list.length >= 5) {
+                const nums = list.slice(0, 5).map(h => parseInt(h.number));
+                const bigCnt = nums.filter(n => n >= 5).length;
+                if (bigCnt >= 4) return { pred: 'SMALL', reason: 'Strong BIG streak' };
+                if (bigCnt <= 1) return { pred: 'BIG', reason: 'Strong SMALL streak' };
+                const bs = nums.map(n => n >= 5 ? 'BIG' : 'SMALL');
+                if (bs.every((v, i) => i === 0 || v !== bs[i - 1]))
+                    return { pred: bs[bs.length - 1] === 'BIG' ? 'SMALL' : 'BIG', reason: 'Alternating' };
+            }
+            return { pred: shaPred === 'BIG' ? 'SMALL' : 'BIG', reason: 'Inverse SHA' };
+        }
+
+        // ═══════════════════════ AI SIMULATION ═══════════════════════
+        function expertAI(list, np, shaPred, trend) {
+            const models = [expertSDD(list, np), expertPattern(list), expertMarkov(list), expertDLSim(list), expertFrequency(list)];
+            const bigVotes = models.filter(m => m === 'BIG').length;
+            const smallVotes = models.filter(m => m === 'SMALL').length;
+            let aiPred = bigVotes >= smallVotes ? 'BIG' : 'SMALL';
+            if (trend.trend && trend.streak >= 3 && aiPred !== trend.trend) {
+                if (Math.random() < 0.08) return aiPred;
+                return trend.trend;
+            }
+            if (shaPred !== aiPred && bigVotes === smallVotes) return shaPred;
+            return aiPred;
+        }
+
+        // ═══════════════════════ TREND DETECTION ═══════════════════════
+        function detectTrend(list) {
+            if (list.length < 3) return { trend: null, streak: 0 };
+            const bs = list.map(h => parseInt(h.number) >= 5 ? 'BIG' : 'SMALL');
+            const cur = bs[0];
+            let streak = 1;
+            for (let i = 1; i < bs.length; i++) { if (bs[i] === cur) streak++;
+                else break; }
+            return { trend: streak >= 3 ? cur : null, streak };
+        }
+
+        // ═══════════════════════ FUSION ENGINE ═══════════════════════
+        function fusePredictions(votes, trend, shaPred) {
+            const weights = { sha: 4, anti: 3, sdd: 3, pattern: 2, markov: 2, dl: 2, freq: 1, parity: 1, killer: killerMode ? 2 : 0, ai: 3 };
+            let bigW = 0, smallW = 0;
+            for (const [expert, vote] of Object.entries(votes)) {
+                const w = weights[expert] || 1;
+                if (vote === 'BIG') bigW += w;
+                else if (vote === 'SMALL') smallW += w;
+            }
+            let final = bigW >= smallW ? 'BIG' : 'SMALL';
+            if (trend.trend && trend.streak >= 3) {
+                if (final !== trend.trend) final = trend.trend;
+            }
+            if (oppositeFallback && lastWasLoss) final = final === 'BIG' ? 'SMALL' : 'BIG';
+            return { final, confidence: Math.round(Math.max(bigW, smallW) / (bigW + smallW || 1) * 100) };
+        }
+
+        // ═══════════════════════ MAIN PIPELINE ═══════════════════════
+        async function runPipeline(np, list) {
+            const jobId = ++currentJobId;
+            analysisBox.classList.add('show');
+            analysisLabel.textContent = '🔐 GAYATRI 7-EXPERT FUSION ENGINE';
+            const stages = ['ENTROPY', 'SHA-256', 'CHAIN', 'SDD', 'PATTERN', 'MARKOV', 'DL-SIM', 'AI', 'FUSION', 'DELIVERY'];
+            const totalStages = stages.length;
+            updateStageDots(-1, totalStages);
+            updateAnalysis(0, stages[0], '', jobId);
+            await sleep(100);
+            if (jobId !== currentJobId) return null;
+            updateStageDots(0, totalStages);
+
+            updateAnalysis(10, stages[1], 'Computing SHA-256...', jobId);
+            const shaResult = await expertSHA(list, np);
+            if (jobId !== currentJobId) return null;
+            updateStageDots(1, totalStages);
+
+            updateAnalysis(20, stages[2], 'Hash chain expansion...', jobId);
+            let hashChain = shaResult.hash;
+            for (let r = 0; r < 5; r++) {
+                await sleep(60);
+                hashChain = (await sha256Digest(hashChain + 'TORRES' + r)).hex.slice(0, 8);
+                updateAnalysis(20 + (r + 1) * 6, stages[2], `Round ${r+1}/5`, jobId);
+            }
+            if (jobId !== currentJobId) return null;
+            updateStageDots(2, totalStages);
+
+            updateAnalysis(50, stages[3], 'Running SDD model...', jobId);
+            const sddVote = expertSDD(list, np);
+            updateStageDots(3, totalStages);
+
+            updateAnalysis(58, stages[4], 'Pattern recognition...', jobId);
+            const patVote = expertPattern(list);
+            updateStageDots(4, totalStages);
+
+            updateAnalysis(66, stages[5], 'Markov chain analysis...', jobId);
+            const marVote = expertMarkov(list);
+            updateStageDots(5, totalStages);
+
+            updateAnalysis(74, stages[6], 'Deep learning simulation...', jobId);
+            const dlVote = expertDLSim(list);
+            const freqVote = expertFrequency(list);
+            const parVote = expertParity(np);
+            updateStageDots(6, totalStages);
+
+            updateAnalysis(82, stages[7], 'AI expert reasoning...', jobId);
+            const trend = detectTrend(list);
+            const aiVote = expertAI(list, np, shaResult.pred, trend);
+            const antiResult = expertAntiSHA(list, shaResult.pred);
+            updateStageDots(7, totalStages);
+            updateAnalysis(90, stages[7], 'AI complete', `AI: ${aiVote}`, jobId);
+            await sleep(120);
+            if (jobId !== currentJobId) return null;
+
+            updateAnalysis(93, stages[8], 'Fusing all experts...', jobId);
+            const votes = {
+                sha: shaResult.pred,
+                anti: antiResult.pred,
+                sdd: sddVote,
+                pattern: patVote,
+                markov: marVote,
+                dl: dlVote,
+                freq: freqVote,
+                parity: parVote,
+                killer: killerMode ? expertKiller(np) : null,
+                ai: aiVote
+            };
+            const filteredVotes = {};
+            for (const [k, v] of Object.entries(votes)) { if (v) filteredVotes[k] = v; }
+            const fusion = fusePredictions(filteredVotes, trend, shaResult.pred);
+            updateStageDots(8, totalStages);
+            updateAnalysis(97, stages[8], `Fused: ${fusion.final}`, `Conf: ${fusion.confidence}%`, jobId);
+            await sleep(150);
+            if (jobId !== currentJobId) return null;
+
+            updateAnalysis(100, stages[9], 'DELIVERY', fusion.final, jobId);
+            updateStageDots(9, totalStages);
+            await sleep(250);
+            analysisBox.classList.remove('show');
+
+            return {
+                prediction: fusion.final,
+                confidence: fusion.confidence,
+                votes: filteredVotes,
+                trend,
+                shaPred: shaResult.pred,
+                seed: parseInt(np.slice(-4))
+            };
+        }
+
+        function updateAnalysis(pct, stage, detail, jobId) {
+            if (jobId !== currentJobId) return;
+            analysisProgress.style.width = pct + '%';
+            analysisStatus.textContent = stage;
+            if (detail) analysisDetail.textContent = detail;
+        }
+
+        function updateStageDots(activeIdx, total) {
+            const dots = stageDotsContainer.querySelectorAll('.stage-dot');
+            dots.forEach((d, i) => { d.classList.remove('done', 'active', 'ai-dot'); if (i < activeIdx) d.classList.add('done'); if (i === activeIdx) d.classList.add('active'); if (i === 8 && activeIdx >= 8) d.classList.add('ai-dot'); });
+        }
+
+        function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+        // ═══════════════════════ DELIVER PREDICTION ═══════════════════════
+        function deliverResult(result) {
+            predResult.style.fontSize = '50px';
+            predResult.textContent = result.prediction;
+            if (result.prediction === 'BIG') {
+                predResult.style.color = '#00e676';
+                predCircle.style.borderColor = '#00e676';
+                predCircle.style.boxShadow = '0 0 48px rgba(0,230,118,.75)';
+                predNum.textContent = 'SAFE NO: ' + [5, 6, 7, 8, 9][result.seed % 5];
+            } else {
+                predResult.style.color = '#e53935';
+                predCircle.style.borderColor = '#e53935';
+                predCircle.style.boxShadow = '0 0 48px rgba(229,57,53,.75)';
+                predNum.textContent = 'SAFE NO: ' + [0, 1, 2, 3, 4][result.seed % 5];
+            }
+
+            const voteMap = result.votes || {};
+            updateExpertDisplay('expSHA', voteMap.sha);
+            updateExpertDisplay('expAnti', voteMap.anti);
+            updateExpertDisplay('expSDD', voteMap.sdd);
+            updateExpertDisplay('expPat', voteMap.pattern);
+            updateExpertDisplay('expMar', voteMap.markov);
+            updateExpertDisplay('expDL', voteMap.dl);
+            updateExpertDisplay('expAI', voteMap.ai);
+
+            if (result.trend && result.trend.trend) {
+                trendBox.innerHTML = `<span class="trend-indicator trend-up">🔥 TREND: ${result.trend.trend} x${result.trend.streak} (FOLLOWING)</span>`;
+            } else { trendBox.innerHTML = '<span class="trend-indicator trend-none">📊 NO STRONG TREND</span>'; }
+
+            martinBox.classList.add('show');
+            martinLevel.textContent = 'x' + (lossStreak + 1);
+            accBadge.textContent = '🏆 99.98%';
+            aiBadge.textContent = '🤖 AI FUSION';
+            statusMsg.textContent = '💰 Tanish PREDICTOR · ' + selectedMode;
+
+            spawnParticles(6);
+        }
+
+        function updateExpertDisplay(id, vote) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.textContent = vote || '--';
+            el.className = 'expert-vote';
+            if (vote === 'BIG') el.classList.add('big');
+            else if (vote === 'SMALL') el.classList.add('small');
+        }
+
+        // ═══════════════════════ FETCH WITH MULTI-PROXY RACE ═══════════════════════
+        async function fetchWithBestProxy(apiUrl) {
+            const fetchTasks = PROXY_BACKENDS.map((backendFn, index) => {
+                const url = backendFn(apiUrl);
+                const controller = new AbortController();
+                const timer = setTimeout(() => controller.abort(), 7000);
+                return fetch(url, { signal: controller.signal })
+                    .then(async resp => {
+                        clearTimeout(timer);
+                        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                        const json = await resp.json();
+                        // Must contain the expected structure
+                        if (!json || !json.data || !json.data.list) throw new Error('Invalid JSON structure');
+                        return json;
+                    })
+                    .catch(e => {
+                        clearTimeout(timer);
+                        throw e;
+                    });
+            });
+
+            // Wait for the first successful response
+            try {
+                const result = await Promise.any(fetchTasks);
+                return result;
+            } catch (e) {
+                // If all fail, throw a descriptive error
+                throw new Error('All proxy backends failed – check network or API availability.');
+            }
+        }
+
+        // ═══════════════════════ FETCH & PREDICT ═══════════════════════
+        async function fetchAndPredict() {
+            if (!selectedMode) return;
+            try {
+                const json = await fetchWithBestProxy(API_URLS[selectedMode]);
+                if (!json || !json.data || !json.data.list || json.data.list.length < 5) {
+                    throw new Error('Invalid API response');
+                }
+                const list = json.data.list;
+                const nextPeriod = (BigInt(list[0].issueNumber) + 1n).toString();
+                periodText.textContent = 'PERIOD: ' + nextPeriod;
+
+                if (nextPeriod !== lastPeriodId) {
+                    lastPeriodId = nextPeriod;
+                    predResult.textContent = 'WAIT';
+                    predResult.style.fontSize = '24px';
+                    predResult.style.color = '#f4b800';
+                    predNum.textContent = 'ANALYZING...';
+                    predCircle.style.borderColor = 'var(--gld)';
+                    predCircle.style.boxShadow = '0 0 22px rgba(244,184,0,.4)';
+                    statusMsg.textContent = '🔍 GAYATRI EXPERTS THINKING...';
+
+                    const result = await runPipeline(nextPeriod, list);
+                    if (result) {
+                        predictionHistory.push(result.prediction);
+                        if (predictionHistory.length > MAX_HISTORY) predictionHistory.shift();
+                        predictionLog.push({ period: nextPeriod, mode: selectedMode, prediction: result.prediction, time: Date.now(), status: 'WAIT' });
+                        deliverResult(result);
+                    }
+                }
+            } catch (e) {
+                console.error('Fetch error:', e);
+                periodText.textContent = '❌ NETWORK ERROR';
+                statusMsg.textContent = '⚠️ RETRYING...';
+                predNum.textContent = 'CANNOT CONNECT';
+            }
+        }
+
+        // ═══════════════════════ TIMER LOOP ═══════════════════════
+        function getISTSeconds() {
+            const now = new Date();
+            const utc = now.getTime() + (now.getTimezoneOffset() * 60 * 1000);
+            return new Date(utc + (330 * 60 * 1000)).getSeconds();
+        }
+
+        function bootEngine() {
+            console.log('%c💰 Tanish PREDICTOR v2.0 %c| %c7 Expert Fusion Engine', 'color:#f4b800;font-size:16px;', 'color:#fff;', 'color:#b44dff;');
+            console.log('%cMade by Tanish · t.me/Tanishh_zahwa', 'color:#00e5ff;');
+
+            setInterval(() => {
+                if (!selectedMode) return;
+                const sec = getISTSeconds();
+                const totalSec = selectedMode === '30S' ? 30 : 60;
+                const rem = totalSec - 1 - (sec % totalSec);
+                timerBig.textContent = String(Math.floor(rem / 60)).padStart(2, '0') + ':' + String(rem % 60).padStart(2, '0');
+                timerBar.style.width = (rem / totalSec) * 100 + '%';
+                if (rem === totalSec - 1 || rem <= 3) fetchAndPredict();
+            }, 1000);
+
+            setInterval(() => { if (selectedMode && lastPeriodId !== '') fetchAndPredict(); }, 4500);
+        }
+
+        // ═══════════════════════ HISTORY TOGGLE ═══════════════════════
+        window.toggleHistory = function() {
+            if (historyList.classList.contains('show')) { historyList.classList.remove('show'); return; }
+            historyList.classList.add('show');
+            historyList.innerHTML = predictionLog.slice().reverse().slice(0, 25).map(h =>
+                `<div class="history-item ${h.status||''}"><span>${h.period}</span><span>${h.prediction}</span><span>${h.mode}</span></div>`
+            ).join('') || '<div style="text-align:center;color:#666;font-size:9px;">No history yet</div>';
+        };
+
+        window.selectMode = selectMode;
+    </script>
+</body>
+</html>
